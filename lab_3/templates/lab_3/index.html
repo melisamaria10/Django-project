@@ -1,0 +1,62 @@
+<style>
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #F2BB7B; 
+        margin: 0;
+        padding: 0;
+        color: #35230D; 
+    }
+
+
+    .main-content {
+        text-align: center;
+        margin: 40px;
+        padding: 30px;
+        background-color: #C26000; 
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .main-content h2 {
+        font-size: 2.5rem;
+        color: #9E9888; 
+        margin-bottom: 20px;
+    }
+
+    .main-content p {
+        font-size: 1.2rem;
+        color: #6F3704; 
+        margin-bottom: 30px;
+    }
+
+    /* Stiluri pentru footer */
+    .footer {
+        text-align: center;
+        padding: 20px;
+        background-color: #522F09; 
+        color: #F2BB7B; 
+        margin-top: 40px;
+        font-size: 1rem;
+    }
+
+    .footer p {
+        margin: 0;
+    }
+</style>
+
+{% extends 'lab_3/base.html' %}
+{% load static %}
+
+{% block title %}Pagina Principală{% endblock %}
+
+{% block content %}
+    <div class="main-content">
+        <h2>Bine ai venit!</h2>
+        <p>Pe acest site, poți vedea și adăuga mașini. Explorează ofertele noastre și găsește ceea ce cauți!</p>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 AutoMove. Toate drepturile rezervate.</p>
+    </footer>
+{% endblock %}

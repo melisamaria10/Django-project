@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact</title>
+    <style>
+        /* Stiluri generale */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F2BB7B; /* Culoare fundal galben deschis */
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #35230D; /* Culoare titlu maro închis */
+            text-align: center;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+
+        /* Stil pentru formular */
+        form {
+            display: flex;
+            flex-direction: column;
+            background-color: #FFFFFF; /* Fundal alb pentru formular */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #35230D; /* Culoare pentru etichete maro închis */
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input[type="text"], input[type="email"], input[type="date"], input[type="number"], textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #9E9888; /* Culoare margini gri deschis */
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-top: 5px;
+            background-color: #F9F9F9; /* Fundal foarte deschis pentru inputuri */
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #C26000; /* Culoare focus portocaliu închis */
+            outline: none;
+        }
+
+        textarea {
+            min-height: 120px;
+        }
+
+        /* Stil pentru buton */
+        button {
+            background-color: #C26000; /* Portocaliu închis pentru buton */
+            color: white;
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #6F3704; /* Maro cărămiziu pentru hover */
+        }
+
+        /* Stiluri pentru erori */
+        .error {
+            color: #522F09; /* Maro închis pentru mesajele de eroare */
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .non-field-errors {
+            color: #522F09; /* Maro închis pentru erori non-field */
+            margin-top: 10px;
+        }
+
+        .non-field-errors p {
+            font-size: 14px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Formular de Contact</h1>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.nume.id_for_label }}">{{ form.nume.label }}</label>
+            {{ form.nume }}
+            {% for error in form.nume.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+    
+        <div class="form-group">
+            <label for="{{ form.prenume.id_for_label }}">{{ form.prenume.label }}</label>
+            {{ form.prenume }}
+            {% for error in form.prenume.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+    
+        <div class="form-group">
+            <label for="{{ form.data_nasterii.id_for_label }}">{{ form.data_nasterii.label }}</label>
+            {{ form.data_nasterii }}
+            {% for error in form.data_nasterii.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+    
+        <div class="form-group">
+            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+            {{ form.email }}
+            {% for error in form.email.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+    
+        <div class="form-group">
+            <label for="{{ form.confirmare_email.id_for_label }}">{{ form.confirmare_email.label }}</label>
+            {{ form.confirmare_email }}
+            {% for error in form.confirmare_email.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+    
+        <div class="form-group">
+            <label for="{{ form.tip_mesaj.id_for_label }}">{{ form.tip_mesaj.label }}</label>
+            {{ form.tip_mesaj }}
+            {% for error in form.tip_mesaj.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+    
+        <div class="form-group">
+            <label for="{{ form.subiect.id_for_label }}">{{ form.subiect.label }}</label>
+            {{ form.subiect }}
+            {% for error in form.subiect.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+    
+        <div class="form-group">
+            <label for="{{ form.minim_zile_asteptare.id_for_label }}">{{ form.minim_zile_asteptare.label }}</label>
+            {{ form.minim_zile_asteptare }}
+            {% for error in form.minim_zile_asteptare.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+    
+        <div class="form-group">
+            <label for="{{ form.mesaj.id_for_label }}">{{ form.mesaj.label }}</label>
+            {{ form.mesaj }}
+            {% for error in form.mesaj.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <div class="non-field-errors">
+            {% for err in form.non_field_errors %}
+                <p class="form-error">{{ err }}</p>
+            {% endfor %}
+        </div>
+
+        <button type="submit">Trimite</button>
+    </form>
+</body>
+</html>

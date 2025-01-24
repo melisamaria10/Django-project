@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listă Mașini</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1, h2 {
+            color: #26415E;
+            text-align: center;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+
+        form div {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #26415E;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0B1B32;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        ul li {
+            background-color: #E5C9D7;
+            margin-bottom: 15px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+
+        ul li img {
+            max-width: 200px;
+            border-radius: 8px;
+        }
+
+        ul li div {
+            flex: 1;
+        }
+
+        ul li strong {
+            font-size: 18px;
+            color: #0D1E4C;
+        }
+
+        ul li p {
+            margin: 5px 0;
+            color: #26415E;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #26415E;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Filtrează Mașinile</h1>
+
+<form method="get">
+    <!-- Filtru pentru marca mașinii -->
+    <div>
+        <label for="marca">Marca:</label>
+        <select id="marca" name="marca">
+            <option value="">Alege o marcă</option>
+            {% for marca in marci %}
+            <option value="{{ marca }}" {% if marca == request.GET.marca %}selected{% endif %}>{{ marca }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Restul filtrelor -->
+    <div>
+        <label for="model">Model:</label>
+        <input type="text" id="model" name="model" value="{{ request.GET.model }}">
+    </div>
+
+    <div>
+        <label for="an_fabricatie">An fabricație:</label>
+        <input type="number" id="an_fabricatie" name="an_fabricatie" value="{{ request.GET.an_fabricatie }}">
+    </div>
+
+    <div>
+        <label for="min_kilometraj">Kilometraj minim:</label>
+        <input type="number" id="min_kilometraj" name="min_kilometraj" value="{{ request.GET.min_kilometraj }}">
+    </div>
+    <div>
+        <label for="max_kilometraj">Kilometraj maxim:</label>
+        <input type="number" id="max_kilometraj" name="max_kilometraj" value="{{ request.GET.max_kilometraj }}">
+    </div>
+
+    <div>
+        <label for="min_pret">Preț minim:</label>
+        <input type="number" id="min_pret" name="min_pret" value="{{ request.GET.min_pret }}">
+    </div>
+    <div>
+        <label for="max_pret">Preț maxim:</label>
+        <input type="number" id="max_pret" name="max_pret" value="{{ request.GET.max_pret }}">
+    </div>
+
+    <div>
+        <label for="dealer">Dealer:</label>
+        <select id="dealer" name="dealer">
+            <option value="">Alege un dealer</option>
+            {% for dealer in dealeri %}
+            <option value="{{ dealer.nume }}" {% if dealer.nume == request.GET.dealer %}selected{% endif %}>{{ dealer.nume }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div>
+        <label for="categorie">Categorie:</label>
+        <select id="categorie" name="categorie">
+            <option value="">Alege o categorie</option>
+            {% for categorie in categorii %}
+            <option value="{{ categorie.nume }}" {% if categorie.nume == request.GET.categorie %}selected{% endif %}>{{ categorie.nume }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div>
+        <label for="tip_motor">Tip motor:</label>
+        <select id="tip_motor" name="tip_motor">
+            <option value="">Alege un tip de motor</option>
+            {% for tip in tipuri_motor %}
+            <option value="{{ tip.tip_motor }}" {% if tip.tip_motor == request.GET.tip_motor %}selected{% endif %}>
+                {{ tip.tip_motor }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button type="submit">Aplică filtrele</button>
+</form>
+
+<h2>Mașini Filtrate</h2>
+<ul>
+    {% for masina in masini %}
+    <li>
+        {% if masina.imagine %}
+        <img src="{{ masina.imagine.url }}" alt="{{ masina.marca }} {{ masina.model }}">
+        {% endif %}
+        <div>
+            <strong>{{ masina.marca }} {{ masina.model }}</strong>
+            <p>An: {{ masina.an_fabricatie }}</p>
+            <p>Kilometraj: {{ masina.kilometraj }} km</p>
+            <p>Preț: {{ masina.pret }} Euro</p>
+            <p>Dealer: {{ masina.dealer.nume }}</p>
+            <p>Categorie: {{ masina.categorie.nume }}</p>
+            <p>Tip motor: {{ masina.tip_motor.tip_motor }}</p>
+        </div>
+    </li>
+    {% empty %}
+    <li class="empty-message">Nu au fost găsite mașini care să corespundă filtrelor tale.</li>
+    {% endfor %}
+</ul>
+
+</body>
+</html>

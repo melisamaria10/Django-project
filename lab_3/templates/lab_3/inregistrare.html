@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inregistrare</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F2BB7B; /* Culoare fundal galben deschis */
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        h1 {
+            font-size: 36px;
+            color: #35230D; /* Culoare titlu maro închis */
+        }
+        
+        form {
+            display: flex; 
+            flex-direction: column; 
+            background-color: #FFFFFF; /* Fundal alb pentru formular */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 75%;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        
+        .form-group {
+            margin-bottom: 20px; 
+        }
+        
+        label {
+            font-weight: bold;
+            color: #35230D; /* Culoare pentru etichete maro închis */
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        input[type="text"], input[type="email"], input[type="date"], input[type="number"], input[type="password"], textarea {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #9E9888; /* Culoare margini gri deschis */
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-top: 5px;
+            background-color: #FFFFFF; /* Fundal alb pentru inputuri */
+        }
+        
+        textarea {
+            min-height: 150px; 
+        }
+        
+        button {
+            background-color: #C26000; /* Portocaliu închis pentru buton */
+            color: white;
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #6F3704; /* Maro cărămiziu pentru hover */
+        }
+        
+        .error {
+            color: #522F09; /* Maro închis pentru mesajele de eroare */
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Formular de Inregistrare</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        
+        <div class="form-group">
+            <label for="{{form.username.id_for_label}}">{{form.username.label}}</label>
+            {{form.username}}
+            {% for error in form.username.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{form.first_name.id_for_label}}">Nume de familie</label>
+            {{form.first_name}}
+            {% for error in form.first_name.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{form.last_name.id_for_label}}">Prenume</label>
+            {{form.last_name}}
+            {% for error in form.last_name.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{form.email.id_for_label}}">Adresa de email</label>
+            {{form.email}}
+            {% for error in form.email.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{form.telefon.id_for_label}}">{{form.telefon.label}}</label>
+            {{form.telefon}}
+            {% for error in form.telefon.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{form.data_nasterii.id_for_label}}">{{form.data_nasterii.label}}</label>
+            {{form.data_nasterii}}
+            {% for error in form.data_nasterii.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{form.gen.id_for_label}}">{{form.gen.label}}</label>
+            {{form.gen}}
+            {% for error in form.gen.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{form.adresa.id_for_label}}">{{form.adresa.label}}</label>
+            {{form.adresa}}
+            {% for error in form.adresa.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{form.cod_postal.id_for_label}}">{{form.cod_postal.label}}</label>
+            {{form.cod_postal}}
+            {% for error in form.cod_postal.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{form.password1.id_for_label}}">Parola</label>
+            {{form.password1}}
+            {% for error in form.password1.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{form.password2.id_for_label}}">Confirmare parola</label>
+            {{form.password2}}
+            {% for error in form.password2.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <button type="submit">Inregistrare</button>
+    </form>
+</body>
+</html>

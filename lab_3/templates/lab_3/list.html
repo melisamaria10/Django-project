@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listă Mașini</title>
+    <style>
+        #banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #C26000;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 20px;
+            display: none; /* Bannerul este ascuns la început */
+            z-index: 9999;
+            animation: slideDown 2s ease-out;
+        }
+
+        @keyframes slideDown {
+            0% { top: -50px; }
+            100% { top: 0; }
+        }
+
+        .banner-btn {
+            background-color: #6F3704;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .banner-btn:hover{
+            background-color: #C26000;
+        }
+
+        .cos-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #6F3704; 
+            color: #fff;
+            padding: 15px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            width: fit-content;
+            margin: 20px auto;
+        }
+        
+        .cos-icon:hover {
+            background-color: #C26000;
+            transform: scale(1.05); /* Mărește puțin dimensiunea */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .cos-icon p {
+            margin: 0;
+            font-size: 16px;
+        }
+        
+        .cos-icon img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }        
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #9E9888; 
+            color: #35230D; 
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Headerul cu titlul */
+        h1 {
+            text-align: center;
+            color: #35230D;
+            padding: 20px; 
+            margin-bottom: 20px;
+        }
+
+        /* Containerul pentru mașini */
+        .masini {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around; 
+            gap: 10px;
+            margin: 0 20px;
+        }
+
+        /* Fiecare mașină în parte */
+        .masina {
+            width: 30%; 
+            background-color: #fff; 
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            color: #26415E;
+        }
+
+        .masina img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .masina strong {
+            display: block;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .masina p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        /* Paginarea */
+        .pagination {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .pagination a {
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            background-color: #6F3704;
+            color: #fff;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .pagination a:hover {
+            background-color: #6F3704; 
+        }
+
+        .pagination span {
+            font-size: 16px;
+            color: #35230D;
+            margin: 0 10px;
+        }
+
+        button {
+            background-color: #C26000;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #6F3704;
+        }
+
+        .cantitate {
+            width: 150px; 
+            padding: 8px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #C26000; 
+            background-color: #F2BB7B; 
+            color: #35230D; 
+            font-size: 16px;
+            text-align: center; 
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        .cantitate:hover {
+            background-color: #C26000;
+            border-color: #6F3704; 
+            color: white;
+        }
+        .car-title-link {
+            color: #C26000;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .car-title-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+    {% extends 'lab_3/base.html' %}
+    {% load static %}
+</head>
+<body>
+
+{% block title %}Listă Mașini {% endblock %}
+{% block content%}
+
+<div id="banner">
+    <p>Reducere 50% <b>doar pentru utilizatorii logați!</b></p>
+    <button class="banner-btn" id="claim-offer">Vezi oferta!</button>
+</div>
+
+<br>
+<br>
+
+<a href="{% url 'cos_virtual' %}" class="cos-icon">
+    <p>Cos de cumparaturi</p>
+</a>
+
+<div class="masini">
+    {% for masina in page_obj %}
+    <div class="masina" data-id="{{masina.id_masina}}" data-stoc="{{masina.stoc}}" data-nume="{{ masina.marca }} {{ masina.model }}" data-pret="{{ masina.pret }}">
+        <a href={% url 'masina_detail' masina.id_masina %} class="car-title-link">
+            <strong>{{ masina.marca }} {{ masina.model }}</strong> 
+        </a> 
+        {{ masina.an_fabricatie }} - 
+        {{ masina.pret }} Euro
+        <br>
+        {% if masina.imagine %}
+        <img src="{{ masina.imagine.url }}" alt="{{ masina.marca }} {{ masina.model }}" style="width:200px; height:auto;">
+        {% endif %}
+        <div>
+        <button class='adauga-cos' data-id="{{masina.id_masina}}" data-stoc="{{masina.stoc}}">Adauga in cos </button>
+        <button class="minus" data-id="{{ masina.id_masina }}" data-actiune="minus">-</button>
+        <button class="plus" data-id="{{ masina.id_masina }}" data-actiune="plus" data-stoc="{{masina.stoc}}">+</button>
+        <button class="sterge" data-id="{{ masina.id_masina }}">Șterge</button>
+        <input type="number" min="1" class="cantitate" data-id="{{ masina.id_masina }}" placeholder="Cantitate">
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; Prima</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Înapoi</a>
+    {% endif %}
+
+    <span>Pagina {{ page_obj.number }} din {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Înainte</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Ultima &raquo;</a>
+    {% endif %}
+</div>
+{% endblock%}
+{% block scripts%}
+<script>
+    window.onload = function() {
+        let id_uri_cos = localStorage.getItem("cos_virtual");
+
+        if (id_uri_cos) {
+            let vector_cos = id_uri_cos.split(","); // Lista de produse ID/cantitate
+            let articole = document.getElementsByClassName("masina"); 
+
+            // Iterăm prin fiecare articol
+            for (let articol of articole) {
+                let idProdus = articol.dataset["id"]; 
+                if (vector_cos.some(function(item) {
+                    return item.split("/")[0] === idProdus; 
+                })) {
+                    articol.style.backgroundColor = "gray"; 
+                }
+            }
+        }
+
+        // Butoanele pentru adăugarea în coș
+        var butoaneAdauga = document.getElementsByClassName("adauga-cos");
+        for (let btn of butoaneAdauga) {
+            btn.onclick = function() {
+                let id = this.dataset["id"]; // ID-ul produsului
+                let cantitateInput = this.closest('.masina').querySelector('.cantitate'); // Obținem cantitatea introdusă
+                let cantitate;
+                let valoare = parseInt(cantitateInput.value);
+                // Dacă nu se introduce o cantitate sau daca avem cantitatea negativă, setăm 1 ca valoare default
+                if (isNaN(valoare) || valoare < 0) {
+                    cantitate = 1;
+                } else {
+                    cantitate = valoare;
+                }
+
+                let id_uri_cos = localStorage.getItem("cos_virtual");
+
+                // Verificăm dacă cantitatea este validă
+                let stoc = parseInt(this.dataset.stoc); // Stocul produsului
+                let vector_cos = id_uri_cos ? id_uri_cos.split(",") : [];
+                let cantitateCurentaInCos = 0;
+                for (let item of vector_cos) {
+                    let parts = item.split("/");
+                    let produsId = parts[0];
+                    if (produsId === id) {
+                        cantitateCurentaInCos += parseInt(parts[1]);
+                    }
+                }
+                if (cantitate + cantitateCurentaInCos > stoc) {
+                    alert("Cantitatea selectată depășește stocul disponibil!");
+                    return; 
+                }
+
+                // Verificăm dacă există deja un coș
+                if (id_uri_cos) {
+                    let vector_cos = id_uri_cos.split(","); 
+
+                    // Verificăm dacă produsul nu este deja în coș
+                    let produsExistă = vector_cos.some(function(item) {
+                        return item.split("/")[0] === id;
+                    });
+
+                    if (produsExistă) {
+                        // Dacă produsul există în coș, actualizăm cantitatea
+                        vector_cos = vector_cos.map(function(item) {
+                            let parts = item.split("/");
+                            if (parts[0] === id) {
+                                let cantitateCurenta = parseInt(parts[1]);
+                                cantitateCurenta += cantitate; 
+                                return id + "/" + cantitateCurenta; 
+                            }
+                            return item;
+                        });
+                        localStorage.setItem("cos_virtual", vector_cos.join(",")); // Salvăm coșul în localStorage
+                    } else {
+                        // Dacă nu există în coș, îl adăugăm cu cantitatea
+                        vector_cos.push(id + "/" + cantitate);
+                        localStorage.setItem("cos_virtual", vector_cos.join(",")); // Salvăm coșul în localStorage
+                    }
+                } else {
+                    // Dacă nu există coș, creăm unul cu acest produs
+                    localStorage.setItem("cos_virtual", id + "/" + cantitate);
+                }
+
+                // Marcăm vizual produsul adăugat
+                let produs = document.querySelector('[data-id="' + id + '"]');
+                produs.style.backgroundColor = "gray"; // Folosim un stil pentru a marca vizual produsul adăugat
+            };
+        }
+
+        // Butoanele pentru "+" (Creșterea cantității)
+        let butoanePlus = document.getElementsByClassName("plus");
+        for (let btnp of butoanePlus) {
+            btnp.onclick = function() {
+                let id = this.dataset.id;
+                let id_uri_cos = localStorage.getItem("cos_virtual");
+
+                if (id_uri_cos) {
+                    let vector_cos = id_uri_cos.split(",");
+                    let cantitateExista = vector_cos.find(function(item) {
+                        return item.split("/")[0] === id; // Găsim produsul în coș
+                    });
+
+                    if (cantitateExista) {
+                        let cantitateCurentaDeAdaugat = parseInt(cantitateExista.split("/")[1]) + 1;
+                        let stoc = parseInt(this.dataset.stoc); // Stocul produsului
+
+                        if (cantitateCurentaDeAdaugat <= stoc) {
+                            vector_cos = vector_cos.map(function(item) {
+                                return item.split("/")[0] === id ? id + "/" + cantitateCurentaDeAdaugat : item;
+                            });
+                            localStorage.setItem("cos_virtual", vector_cos.join(","));
+                        } else {
+                            alert("Cantitatea selectată depășește stocul disponibil!");
+                        }
+                    } else {
+                        alert("Produsul nu a fost găsit în coș!");
+                    }
+                }
+            };
+        }
+
+        // Butoanele pentru "-" (Scăderea cantității)
+        let butoaneMinus = document.getElementsByClassName("minus");
+        for (let btnm of butoaneMinus) {
+            btnm.onclick = function() {
+                let id = this.dataset.id;
+                let id_uri_cos = localStorage.getItem("cos_virtual");
+
+                if (id_uri_cos) {
+                    let vector_cos = id_uri_cos.split(",");
+                    let cantitateExista = vector_cos.find(function(item) {
+                        return item.split("/")[0] === id; // Găsim produsul în coș
+                    });
+
+                    if (cantitateExista) {
+                        let cantitateCurentaDeScazut = parseInt(cantitateExista.split("/")[1]) - 1;
+
+                        if (cantitateCurentaDeScazut >= 1) {
+                            vector_cos = vector_cos.map(function(item) {
+                                return item.split("/")[0] === id ? id + "/" + cantitateCurentaDeScazut : item;
+                            });
+                            localStorage.setItem("cos_virtual", vector_cos.join(","));
+                        } else {
+                            alert("Cantitatea nu poate fi mai mică de 1.");
+                        }
+                    } else {
+                        alert("Produsul nu a fost găsit în coș!");
+                    }
+                }
+            };
+        }
+
+        let butoaneSterge = document.getElementsByClassName("sterge");
+        for (let btns of butoaneSterge) {
+            btns.onclick = function() {
+                let id = this.dataset.id;
+                let id_uri_cos = localStorage.getItem("cos_virtual");
+                if (id_uri_cos) {
+                    let vector_cos = id_uri_cos.split(","); // Transformăm coșul într-un vector
+                    // Filtrăm produsele care NU au ID-ul respectiv (le păstrăm pe celelalte)
+                    vector_cos = vector_cos.filter(function(item) {
+                        return item.split("/")[0] !== id;
+                    });
+
+                    if (vector_cos.length > 0) {
+                        // Dacă mai rămân produse, actualizăm localStorage
+                        localStorage.setItem("cos_virtual", vector_cos.join(","));
+                    } else {
+                        // Dacă nu mai rămân produse, golim localStorage
+                        localStorage.removeItem("cos_virtual");
+                    }
+
+                    let produs = this.closest(".masina");
+                    produs.style.backgroundColor = "";
+                }
+            };
+        }
+
+        let prob = Math.random();
+        console.log(prob);  
+
+        let banner = document.getElementById("banner");
+        if (banner) {
+            if (prob < 0.3) {
+                banner.style.display = "block";  
+            } else {
+                console.log("Banner-ul nu se va afișa deoarece prob >= 0.3");
+            }
+
+            banner.onclick = function() {
+                {% if user.is_authenticated %}
+                    window.location.href = "{% url 'adauga_permisiune_oferta' %}";
+                {% else %}
+                    window.location.href = "{% url 'oferta' %}";  
+                {% endif %}
+            };
+        } else {
+            console.log("Elementul banner nu a fost găsit.");
+        }
+    };
+</script>
+{% endblock%}
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adaugă Promoție</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #9E9888; /* Bej cald */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1, h2 {
+            color: #6F3704; /* Maro cald */
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: #F2BB7B; /* Crem cald deschis */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 30px;
+        }
+
+        form button {
+            background-color: #C26000; /* Portocaliu intens */
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        form button:hover {
+            background-color: #522F09; /* Maro închis */
+        }
+
+        .promo-list {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+            max-width: 600px;
+            margin-top: 30px;
+        }
+
+        .promo-list li {
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #F2BB7B; /* Crem cald deschis */
+            border: 1px solid #C26000; /* Margini portocalii */
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .promo-list li strong {
+            color: #35230D; /* Maro închis */
+            font-size: 18px;
+        }
+
+        .promo-list li span {
+            display: block;
+            margin-top: 5px;
+            color: #6F3704; /* Maro cald */
+        }
+
+        p {
+            color: #26415E; /* Albastru închis */
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>Adaugă Promoție</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Adaugă Promoție</button>
+    </form>
+
+    <h2>Promoțiile existente</h2>
+    <ul class="promo-list">
+        {% for promotie in promotii %}
+            <li>
+                <strong>{{ promotie.nume }}</strong>
+                <span>Valabilă până la {{ promotie.data_expirare }}</span>
+                <span>Reducere de {{ promotie.reduceri }}%</span>
+            </li>
+        {% empty %}
+            <p>Nu există promoții active.</p>
+        {% endfor %}
+    </ul>
+    {% include 'lab_3/messages.html' %}
+</body>
+</html>

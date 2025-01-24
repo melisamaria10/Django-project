@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AutoMove{% endblock %}</title>
+    <style>
+        /* Stiluri generale */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F2BB7B; 
+            margin: 0;
+            padding: 0;
+            color: #35230D; 
+        }
+
+        /* Secțiunea logo */
+        .logo {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #F2BB7B; 
+            color: #6F3704; 
+        }
+
+        .logo img {
+            width: 100px; 
+            height: auto;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        /* Stiluri pentru meniu */
+        ul.menu {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            background-color: #C26000; 
+            overflow: hidden;
+            text-align: center;
+        }
+
+        ul.menu li {
+            display: inline-block;
+        }
+
+        ul.menu li a {
+            display: block;
+            padding: 14px 20px;
+            text-decoration: none;
+            color: #F2BB7B; 
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        ul.menu li a:hover {
+            background-color: #9E9888; 
+            color: #35230D; 
+        }
+
+        ul.menu li a.special {
+            background-color: #6F3704; 
+        }
+
+        /* Meniu pentru utilizatorii autentificați */
+        ul.menu li a:active {
+            background-color: #C26000; 
+        }
+
+        /* Stiluri pentru conținut */
+        main {
+            padding: 20px;
+            background-color: #F2BB7B; 
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{% static 'images/image_transparent-Photoroom.png' %}" alt="AutoMove Logo">
+            <h1>AutoMove</h1>
+        </div>
+        <nav>
+            <ul class="menu">
+                <li><a href="{% url 'index' %}">Acasă</a></li>
+                <li><a href="{% url 'listare_masini' %}">Lista Mașinilor</a></li>
+                <li><a href="{% url 'filtrare' %}">Filtrare Mașini</a></li>
+                
+                {% if can_add_masina %}
+                    <li><a class="special" href="{% url 'creare_masina' %}">Adaugă Mașină</a></li>
+                {% endif %}
+                
+                {% if request.user.is_authenticated %}
+                    <li><a href="{% url 'logout' %}">Ieși din cont</a></li>
+                    <li><a href="{% url 'profil' %}">Profil</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Autentificare</a></li>
+                {% endif %}
+                <li><a href="{% url 'formular' %}">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>

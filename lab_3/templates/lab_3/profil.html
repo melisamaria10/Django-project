@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Utilizator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #9E9888; /* Bej cald */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #F2BB7B; /* Crem cald deschis */
+            width: 80%;
+            max-width: 800px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #6F3704; /* Maro cald */
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 16px;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .profile-info {
+            margin-bottom: 20px;
+        }
+
+        .profile-info p {
+            font-weight: bold;
+            color: #6F3704; /* Maro cald */
+        }
+
+        a {
+            color: #6F3704; /* Maro cald */
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px;
+            border: 2px solid #6F3704; /* Maro cald */
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        a:hover {
+            background-color: #C26000; /* Portocaliu intens */
+            color: white;
+        }
+
+        a:focus {
+            outline: none;
+            border-color: #C26000; /* Portocaliu intens */
+        }
+
+        .back-btn {
+            color: #6F3704;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 5px;
+            margin-top: 30px;
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: #C26000; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Bun venit, {{ username }}!</h1>
+
+        <div class="profile-info">
+            <p>Email: {{ email }}</p>
+            <p>Telefon: {{ telefon }}</p>
+            <p>Data nașterii: {{ data_nasterii }}</p>
+            <p>Gen: {{ gen }}</p>
+            <p>Adresă: {{ adresa }}</p>
+            <p>Cod poștal: {{ cod_postal }}</p>
+        </div>
+
+        <a href="{% url 'schimba_parola' %}">Schimbă parola</a>
+        
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">Deconectare</a>
+        {% endif %}
+        <a href="{% url 'index' %}" class="back-btn">Înapoi la pagina principală</a>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schimbare Parolă</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #9E9888; /* Bej cald */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #F2BB7B; /* Crem cald deschis */
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #6F3704; /* Maro cald */
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #6F3704; /* Maro cald */
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #C48CB3; /* Mov deschis */
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+
+        button {
+            background-color: #C48CB3; /* Mov deschis */
+            color: white;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #6F3704; /* Maro cald */
+        }
+
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        .messages li {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .messages .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .messages .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Schimbare Parolă</h1>
+        <form method="post">
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="{{ form.old_password.id_for_label }}">{{ form.old_password.label }}</label>
+                {{ form.old_password }}
+                {% for error in form.old_password.errors %}
+                    <div class="messages error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.new_password1.id_for_label }}">{{ form.new_password1.label }}</label>
+                {{ form.new_password1 }}
+                {% for error in form.new_password1.errors %}
+                    <div class="messages error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.new_password2.id_for_label }}">{{ form.new_password2.label }}</label>
+                {{ form.new_password2 }}
+                {% for error in form.new_password2.errors %}
+                    <div class="messages error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <button type="submit">Schimbă Parola</button>
+        </form>
+    </div>
+</body>
+</html>

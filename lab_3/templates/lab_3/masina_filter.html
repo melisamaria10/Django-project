@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtrare Mașini</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #9E9888; 
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1, h2 {
+            color: #35230D; 
+        }
+
+        form {
+            background-color: #F2BB7B; 
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        form ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        form ul li {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        form ul li label {
+            font-weight: bold;
+            font-size: 14px;
+            color: #6F3704; 
+            margin-bottom: 5px;
+        }
+
+        form ul li input,
+        form ul li select {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #C26000; 
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: #F2BB7B; 
+        }
+
+        form ul li input:focus,
+        form ul li select:focus {
+            outline: none;
+            border-color: #522F09; 
+        }
+
+        button {
+            background-color: #C26000; 
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #35230D; 
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        ul li {
+            background-color: #F2BB7B; 
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        ul li img {
+            max-width: 150px;
+            max-height: 100px;
+            border-radius: 4px;
+            object-fit: cover;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        ul li .details {
+            flex: 1;
+        }
+
+        ul li strong {
+            font-size: 18px;
+            color: #35230D; 
+        }
+
+        ul li p {
+            margin: 5px 0;
+            color: #6F3704; 
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #6F3704; 
+            font-style: italic;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Filtrează Mașinile</h1>
+
+<form method="get">
+    {% csrf_token %}
+    <ul>
+        {{ form.as_ul }}
+    </ul>
+    <button type="submit">Aplică filtrele</button>
+</form>
+
+<h2>Mașini Filtrate</h2>
+<ul>
+    {% for masina in masini %}
+    <li>
+        {% if masina.imagine %}
+        <img src="{{ masina.imagine.url }}" alt="{{ masina.marca }} {{ masina.model }}">
+        {% endif %}
+        <div class="details">
+            <strong>{{ masina.marca }} {{ masina.model }}</strong>
+            <p>An: {{ masina.an_fabricatie }}</p>
+            <p>Kilometraj: {{ masina.kilometraj }} km</p>
+            <p>Preț: {{ masina.pret }} Euro</p>
+            <p>Dealer: {{ masina.dealer.nume }}</p>
+            <p>Categorie: {{ masina.categorie.nume }}</p>
+            <p>Tip motor: {{ masina.tip_motor.tip_motor }}</p>
+        </div>
+    </li>
+    {% empty %}
+    <p class="empty-message">Nu au fost găsite mașini care să corespundă filtrelor tale.</p>
+    {% endfor %}
+</ul>
+
+</body>
+</html>

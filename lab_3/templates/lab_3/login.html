@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autentificare</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #9E9888; /* Bej cald */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: #F2BB7B; /* Crem cald deschis */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+            color: #6F3704; /* Maro cald */
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #6F3704; /* Maro cald */
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #C26000; /* Portocaliu intens */
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background-color: #F2BB7B; /* Crem cald deschis */
+        }
+        input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+        }
+        .checkbox-label {
+            margin-left: 8px;
+            font-weight: normal;
+            color: #6F3704; /* Maro cald */
+        }
+        .error-message {
+            color: #C26000; /* Portocaliu intens */
+            font-size: 14px;
+        }
+        button[type="submit"] {
+            background-color: #C26000; /* Portocaliu intens */
+            color: white;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button[type="submit"]:hover {
+            background-color: #6F3704; /* Maro cald */
+        }
+        .alert {
+            color: #C26000; /* Portocaliu intens */
+            text-align: center;
+            font-size: 14px;
+        }
+        .register-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+        }
+        .register-link a {
+            color: #C26000; /* Portocaliu intens pentru link */
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h1>Autentificare</h1>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            {% include 'lab_3/messages.html' %}
+            
+            <div class="form-group">
+                <label for="username">{{ form.username.label }}</label>
+                {{ form.username }}
+                {% for error in form.username.errors %}
+                    <p class="error-message">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                <label for="password">{{ form.password.label }}</label>
+                {{ form.password }}
+                {% for error in form.password.errors %}
+                    <p class="error-message">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="form-group checkbox-container">
+                {{ form.ramane_logat }}
+                <label for="ramane_logat" class="checkbox-label">{{ form.ramane_logat.label }}</label>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <!-- Link pentru a merge la pagina de înregistrare -->
+        <div class="register-link">
+            <p>Nu ai un cont? <a href="{% url 'inregistrare' %}">Înregistrează-te aici</a></p>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if titlu %}{{ titlu }}{% else %}Eroare 403{% endif %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            color: #dc3545;
+        }
+        p {
+            font-size: 1.2em;
+        }
+        .user-message {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>{% if titlu %}{{ titlu }}{% else %}Eroare 403{% endif %}</h1>
+    <p>Accesul la această resursă nu este permis.</p>
+
+    <div class="user-message">
+        {% if user.is_authenticated %}
+            Salut {{ user.username }}
+        {% else %}
+            Salut preastimate anonim
+        {% endif %}
+    </div>
+
+    <p>{% if mesaj_personalizat %}{{ mesaj_personalizat }}{% endif %}</p>
+</body>
+</html>

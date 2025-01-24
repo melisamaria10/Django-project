@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coș Virtual</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #9E9888;
+            color: #35230D;
+            margin: 0;
+            padding: 0;
+        }
+
+        #cos-container {
+            width: 70%;
+            margin: 20px 0 20px 20px;
+            padding: 20px;
+            background-color: #F2BB7B;
+            border: 1px solid #C26000;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .produs {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+
+        .produs:last-child {
+            border-bottom: none;
+        }
+
+        .produs img {
+            width: 80px;
+            height: auto;
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+
+        .produs-info {
+            flex-grow: 1;
+        }
+
+        .produs-info h3 {
+            font-size: 18px;
+            margin: 0;
+            color: #35230D;
+        }
+
+        .produs-info p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .produs-total {
+            text-align: right;
+            font-weight: bold;
+            color: #6F3704;
+        }
+
+        .total-container {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #C26000;
+        }
+
+        .total-container strong {
+            color: #dc3545;
+        }
+
+        button {
+            background-color: #C26000;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #6F3704;
+        }
+
+        a {
+            text-decoration: none;
+            font-size: 16px;
+            color: white;
+            background-color: #C26000;
+            border: 1px solid #C26000;
+            padding: 8px 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        a:hover{
+            background-color: #6F3704;
+            color: white;
+        }
+
+        .sort-container {
+            margin-bottom: 20px;
+            color: #6F3704;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        .finalizare-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .finalizare-container button {
+            background-color: #C26000; 
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            max-width: 250px;
+        }
+
+        .finalizare-container button:hover {
+            background-color: #6F3704; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Coșul Tău de Cumpărături</h1>
+
+    <div class="sort-container">
+        <label for="sortare-select">Sortează după:</label>
+        <select id="sortare-select">
+            <option value="nume">Nume</option>
+            <option value="pret">Preț</option>
+        </select>
+    </div>
+
+    <div id="cos-container"></div>
+
+    <div class="finalizare-container">
+        <button id='finalizeaza-comanda'>Finalizare comandă</button>
+    </div>
+    <a href="{% url 'listare_masini' %}">Inapoi</a>
+
+    <script>
+        window.onload = async function() {
+            let cosVirtual = localStorage.getItem("cos_virtual");
+
+            if (!cosVirtual) {
+                document.getElementById("cos-container").innerHTML = "<p>Coșul este gol!</p>";
+                return;
+            }
+
+            let produseInCos = cosVirtual.split(","); // id/cantitate
+            let cartItems = produseInCos.map(item => {
+                let [id, cantitate] = item.split("/");
+                return { id: id, cantitate: parseInt(cantitate) };
+            });
+
+            let totalPret = 0;
+            let totalCantitate = 0;
+            let cosHTML = "";
+
+            // Colectăm produsele
+            let produse = [];
+
+            for (let item of cartItems) {
+                try {
+                    // Facem fetch către URL-ul produsului
+                    let url = `http://localhost:8000/lab_3/masina/json/${item.id}`;
+                    let response = await fetch(url);
+
+                    if (!response.ok) {
+                        console.error(`Nu s-a putut obține produsul cu ID ${item.id}`);
+                        continue;
+                    }
+
+                    // Parsăm răspunsul
+                    let produs = await response.json();
+
+                    // Adăugăm informațiile produsului într-un array
+                    let totalProdus = produs.pret * item.cantitate;
+                    totalPret += totalProdus;
+                    totalCantitate += item.cantitate;
+
+                    produse.push({
+                        nume: produs.marca + " " + produs.model,
+                        pret: produs.pret,
+                        cantitate: item.cantitate,
+                        total: totalProdus,
+                        imagine: produs.imagine,
+                    });
+
+                } catch (error) {
+                    console.error("Eroare la procesarea produsului cu ID " + item.id, error);
+                }
+            }
+
+            // Afișăm produsele
+            function afiseazaProduse() {
+                cosHTML = "";
+                produse.forEach(produs => {
+                    cosHTML += `
+                        <div class="produs">
+                            <img src="${produs.imagine}" alt="${produs.nume}" width="100">
+                            <div class="produs-info">
+                                <h3>${produs.nume}</h3>
+                                <p>Preț: ${produs.pret} Euro</p>
+                                <p>Cantitate: ${produs.cantitate}</p>
+                                <p>Total: ${produs.total} Euro</p>
+                            </div>
+                            <div class="produs-total">
+                                ${produs.total} Euro
+                            </div>
+                        </div>
+                    `;
+                });
+
+                // Adăugăm totalul
+                cosHTML += `
+                    <div class="total-container">
+                        <h3>Total Produse: ${totalCantitate}</h3>
+                        <h3>Total Preț: ${totalPret} Euro</h3>
+                    </div>
+                `;
+
+                document.getElementById("cos-container").innerHTML = cosHTML;
+            }
+
+            // Afișăm produsele
+            afiseazaProduse();
+
+            // Adăugăm evenimentul de schimbare a selecției pentru sortare
+            document.getElementById("sortare-select").addEventListener("change", function() {
+                sorteazaProduse(this.value);
+            });
+
+            // Funcția de sortare
+            function sorteazaProduse(criteriu) {
+                if (criteriu === "nume") {
+                    produse.sort((a, b) => a.nume.localeCompare(b.nume));
+                } else if (criteriu === "pret") {
+                    produse.sort((a, b) => a.pret - b.pret);
+                }
+                afiseazaProduse();
+            }
+
+
+            var butonComanda = document.getElementById('finalizeaza-comanda');
+
+            butonComanda.onclick = async function() {
+            let cos_virtual = localStorage.getItem("cos_virtual");
+            let produse_in_cos = [];
+
+            // Dacă coșul este gol, oprește procesul
+            if (!cos_virtual) {
+                alert("Coșul este gol!");
+                return;
+            }
+
+            // Extragem produsele din coș (id, cantitate)
+            let produse = cos_virtual.split(",");
+            for (let produs of produse) {
+                let [id, cantitate] = produs.split("/");
+                produse_in_cos.push({ id: id, cantitate: parseInt(cantitate) });
+            }
+
+            let total_pret = 0;
+            let total_cantitate = 0;
+            let produse_detaliate = [];
+
+            // Colectăm produsele detaliate (inclusiv prețul) de la server
+            for (let item of produse_in_cos) {
+                try {
+                    let url = `http://localhost:8000/lab_3/masina/json/${item.id}`;
+                    let response = await fetch(url);
+
+                    if (!response.ok) {
+                        console.error(`Nu s-a putut obține produsul cu ID ${item.id}`);
+                        continue;
+                    }
+
+                    // Obținem detaliile produsului
+                    let produs = await response.json();
+                    console.log(produs);
+
+                    // Calculăm prețul total pentru acest produs
+                    let total_produs = produs.pret * item.cantitate;
+                    total_pret += total_produs;
+                    total_cantitate += item.cantitate;
+
+                    // Adăugăm produsul în array-ul de produse detaliate
+                    produse_detaliate.push({
+                        id: item.id,
+                        nume: produs.marca + " " + produs.model,
+                        pret: produs.pret,
+                        cantitate: item.cantitate,
+                        total: total_produs,
+                        imagine: produs.imagine,
+                    });
+                } catch (error) {
+                    console.error("Eroare la procesarea produsului cu ID " + item.id, error);
+                }
+            }
+
+            // Dacă nu există produse detaliate, oprește procesul
+            if (produse_detaliate.length === 0) {
+                alert("Nu s-au putut obține detalii pentru produse.");
+                return;
+            }
+
+            // Trimitem datele către server pentru procesare
+            fetch('http://localhost:8000/lab_3/procesare_date', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',  // CSRF token pentru protecție
+                },
+                body: JSON.stringify({
+                    produse: produse_detaliate,
+                    total_pret: total_pret,
+                    total_cantitate: total_cantitate
+                })
+            })
+            .then(response => {
+                console.log(response);
+                return response.json()})
+            .then(data => {
+                console.log(data);
+                alert(data.message);
+                if (data.status === 'success') {
+                    // Goliți coșul și reîncărcați pagina
+                    localStorage.removeItem("cos_virtual");
+                    location.reload();
+                }
+            })
+            .catch(error => console.error('Eroare:', error));
+        };
+    }
+         
+    </script>
+</body>
+</html>
