@@ -11,8 +11,6 @@ django.setup()
 
 from django.utils import timezone
 
-def task1():
-    print('ALOOO')
 
 def sterge_utilizatori_neconfirmati():
     utilizatori = CustomUser.objects.filter(email_confirmat=False)
